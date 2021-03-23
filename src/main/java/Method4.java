@@ -77,6 +77,6 @@ public class Method4 { //Метод секущих
             writer.write(String.format("f(x*) = %.10f%n", functions.f(start_X, number)));
             writer.flush();
         }
-        drawChart.draw(Math.round(a), Math.round(b));
+        drawChart.draw(Math.round(a), Math.round(b), number);
     }
 }

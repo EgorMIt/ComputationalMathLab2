@@ -1,76 +1,95 @@
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.ValueMarker;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
+
 public class DrawChart {
-    //Отрисовка графика функции в файл
-    public void draw(long a, long b) {
-        a -= 1;
-        b += 1;
+    Functions functions = new Functions();
 
-        DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
-
-        for (long i = a; i <= b; i++) {
-            line_chart_dataset.addValue(4.45 * Math.pow(i, 3) + 7.81 * Math.pow(i, 2) - 9.62 * i - 8.17,
-                    "function", String.valueOf(i));
-        }
+    private void rawDraw(XYSeriesCollection lineDataset) {
 
 
-        JFreeChart lineChartObject = ChartFactory.createLineChart(
-                "fun(x)", "x",
+        JFreeChart lineChart = ChartFactory.createXYLineChart(
+                "f(x)", "x",
                 "y",
-                line_chart_dataset, PlotOrientation.VERTICAL,
+                lineDataset, PlotOrientation.VERTICAL,
                 true, true, false);
 
-        int width = 1920;    /* Width of the image */
-        int height = 1080;   /* Height of the image */
-        File lineChart = new File("src/main/res/Chart.jpeg");
+        int width = 1920;
+        int height = 1080;
+
+
+
+
+
+
         try {
-            ChartUtilities.saveChartAsJPEG(lineChart, lineChartObject, width, height);
+            ChartUtils.saveChartAsJPEG(new File("src/main/res/Chart.jpeg"), lineChart, width, height);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
     }
 
-    private double f(double x) {
-        return 4.45 * Math.pow(x, 3) + 7.81 * Math.pow(x, 2) - 9.62 * x - 8.17;
+
+
+    public void drawForIteration(double a, double b, double lambda, int number) {
+        XYSeriesCollection lineDataset = new XYSeriesCollection ();
+
+        a = a - 1;
+        b = b + 1;
+
+        XYSeries function = new XYSeries("function");
+
+        double len = b-a;
+        for (double i = a; i <= b; i+=len/12) {
+            function.add(i,i - lambda * functions.f(i, number));
+        }
+
+        XYSeries zero = new XYSeries("zero");
+        zero.add(a,0);
+        zero.add(b,0);
+
+
+        lineDataset.addSeries(function);
+        lineDataset.addSeries(zero);
+
+        rawDraw(lineDataset);
+
     }
 
-    public void drawForIt(long a, long b, double lambda) {
-        a -= 1;
-        b += 1;
+    public void draw(double a, double b, int number){
+        XYSeriesCollection lineDataset = new XYSeriesCollection ();
 
-        DefaultCategoryDataset line_chart_dataset = new DefaultCategoryDataset();
+        a = a - 1;
+        b = b + 1;
 
-        for (long i = a; i <= b; i++) {
-            line_chart_dataset.addValue(i - lambda * f(i),
-                    "function", String.valueOf(i));
+
+        XYSeries function = new XYSeries("function");
+        double len = b-a;
+        for (double i = a; i <= b; i+=len/12) {
+            function.add(i,functions.f(i, number));
         }
 
-        for (long i = a; i <= b; i++) {
-            line_chart_dataset.addValue(i,
-                    "x=y", String.valueOf(i));
-        }
+        XYSeries zero = new XYSeries("zero");
+        zero.add(a,0);
+        zero.add(b,0);
 
 
-        JFreeChart lineChartObject = ChartFactory.createLineChart(
-                "fun(x)", "x",
-                "y",
-                line_chart_dataset, PlotOrientation.VERTICAL,
-                true, true, false);
+        lineDataset.addSeries(function);
+        lineDataset.addSeries(zero);
 
-        int width = 1920;    /* Width of the image */
-        int height = 1080;   /* Height of the image */
-        File lineChart = new File("Chart.jpeg");
-        try {
-            ChartUtilities.saveChartAsJPEG(lineChart, lineChartObject, width, height);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        rawDraw(lineDataset);
+
     }
 }

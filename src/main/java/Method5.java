@@ -45,7 +45,8 @@ public class Method5 { //Метод простых итераций
                 if (!flag_file) {
                     System.out.println("Критерий окончания:  |Xn - Xn-1| > (1-q)*e/q ");
                 } else {
-                    writer.write("Критерий окончания:  |Xn - Xn-1| > (1-q)*e/q \n");
+                    writer.write("Критерий окончания:  |Xn - Xn-1| > (1-q)*e/q \n\n");
+                    writer.flush();
                 }
             }
             else if (q >0 && q <= 0.5) {
@@ -107,6 +108,6 @@ public class Method5 { //Метод простых итераций
                 writer.flush();
             }
         }
-        drawChart.drawForIt(Math.round(a), Math.round(b), lambda);
+        drawChart.drawForIteration(Math.round(a), Math.round(b), lambda, number);
     }
 }

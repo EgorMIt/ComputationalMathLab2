@@ -32,6 +32,12 @@ public class Method2 { //Метод хорд
         }
 
         start_X = functions.setStartX(a, b, number);
+        boolean flagA = false;
+        if (start_X == a) {
+
+        } else {
+            flagA = true;
+        }
         if (start_X == a)
             end_X = b;
         else
@@ -84,6 +90,6 @@ public class Method2 { //Метод хорд
             writer.flush();
         }
 
-        drawChart.draw(Math.round(a), Math.round(b));
+        drawChart.draw(Math.round(a), Math.round(b), number);
     }
 }
